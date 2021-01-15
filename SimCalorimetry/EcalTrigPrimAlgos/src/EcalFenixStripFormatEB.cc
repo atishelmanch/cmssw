@@ -88,9 +88,9 @@ void EcalFenixStripFormatEB::process(std::vector<int> &sFGVBout,
   return;
 }
 
-void EcalFenixStripFormatEB::setParameters(uint32_t &id, const EcalTPGSlidingWindow *&slWin, EcalFenixTPMode TPmode) {
+void EcalFenixStripFormatEB::setParameters(uint32_t &id, const EcalTPGSlidingWindow *&slWin,  EcalFenixTPMode TPmode) {
   // TP mode contains options for the formatter (odd/even filters config)
-  TPmode_= TPmode;
+  TPmode_ = TPmode;
   const EcalTPGSlidingWindowMap &slwinmap = slWin->getMap();
   EcalTPGSlidingWindowMapIterator it = slwinmap.find(id);
   if (it != slwinmap.end())

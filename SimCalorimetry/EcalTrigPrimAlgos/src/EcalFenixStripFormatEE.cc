@@ -13,9 +13,11 @@ EcalFenixStripFormatEE::~EcalFenixStripFormatEE() {}
 
 //-----------------------------------------------------------------------------------------
 
-int EcalFenixStripFormatEE::setInput(int input, int inputPeak, int fgvb) {
-  inputPeak_ = inputPeak;
-  input_ = input;
+int EcalFenixStripFormatEE::setInput(int input_even, int inputEvenPeak, int input_odd, int inputOddPeak,  int fgvb) {
+  inputEvenPeak_ = inputEvenPeak;
+  input_even_ = input_even;
+  inputOddPeak_ = inputOddPeak;
+  input_odd_ = input_odd;
   fgvb_ = fgvb;
   return 0;
 }
@@ -26,33 +28,76 @@ int EcalFenixStripFormatEE::process() {
   if (stripStatus_ != 0)
     return 0;
 
-  // Peak not found - only return fgvb
-  if (inputPeak_ == 0)
-    return ((fgvb_ & 0x1) << 12);
+  int even_output = 0;
+  int odd_output = 0;
 
-  int output = input_ >> shift_;
+  if (TPmode_.disable_EE_even_peak_finder){
+    even_output = input_even_ >> shift_;
+  }else{
+    if (inputEvenPeak_ == 1) even_output = input_even_ >> shift_;
+  }
+
+  if (TPmode_.enable_EE_odd_peak_finder){
+    if(inputOddPeak_ == 1) odd_output = input_odd_ >> shift_;
+  }else{
+    odd_output = input_odd_ >> shift_;
+  }
+
+  // Prepare the amplitude output for the strip looking at the TPmode options
+  int output = 0;
+  bool odd_larger = false;
+  switch(TPmode_.EE_strip_formatter_output){
+    case 0: // even filter out
+      output = even_output;  
+      break;
+    case 1: // odd filter out
+      if (TPmode_.enable_EE_odd_filter)  output = odd_output;
+      else output = even_output;
+      break;
+    case 2: // larger between odd and even
+      if (TPmode_.enable_EE_odd_filter && odd_output > even_output) {
+        output = odd_output;
+        odd_larger = true;
+      }
+      else output = even_output;
+      break;
+    case 3: // even + odd
+      if (TPmode_.enable_EE_odd_filter) output = even_output + odd_output;
+      else output = even_output;
+      break;
+  }
 
   // barrel saturates at 12 bits, endcap at 10!
   // Pascal: finally no,endcap has 12 bits as in EB (bug in FENIX!!!!)
   if (output > 0XFFF)
-    output = 0XFFF;
-  output = output | ((fgvb_ & 0x1) << 12);  // Pascal (was 10)
+    output = 0XFFF;  
+
+  // Info bits
+  // bit12 is sFGVB, bit13 is for odd>even flagging
+  output |= ((fgvb_ & 0x1) << 12);
+
+  if (TPmode_.enable_EE_odd_filter && TPmode_.flag_EB_odd_even_strip ) {
+    output |= ((odd_larger & 0x1) << 13);
+  }
 
   return output;
 }
 //------------------------------------------------------------------------------------------
 
 void EcalFenixStripFormatEE::process(std::vector<int> &fgvbout,
-                                     std::vector<int> &peakout,
-                                     std::vector<int> &filtout,
-                                     std::vector<int> &output) {
-  if (peakout.size() != filtout.size()) {
+                                    std::vector<int> &peakout_even,
+                                    std::vector<int> &filtout_even,
+                                    std::vector<int> &peakout_odd,
+                                    std::vector<int> &filtout_odd,
+                                    std::vector<int> &output) {
+  if (peakout_even.size() != filtout_even.size() || fgvbout.size() != filtout_even.size() ||
+      peakout_odd.size() != filtout_odd.size() || filtout_odd.size() != filtout_even.size()) {
     edm::LogWarning("EcalTPG") << " problem in EcalFenixStripFormatEE: peak_out and filt_out don't "
                                   "have the same size";
-    std::cout << " Size peak_out" << peakout.size() << ", size filt_out:" << filtout.size() << std::flush << std::endl;
+    std::cout << " Size peak_out" << peakout_even.size() << ", size filt_out:" << filtout_even.size() << std::flush << std::endl;
   }
-  for (unsigned int i = 0; i < filtout.size(); i++) {
-    setInput(filtout[i], peakout[i], fgvbout[i]);
+  for (unsigned int i = 0; i < filtout_even.size(); i++) {
+    setInput(filtout_even[i], peakout_even[i],filtout_odd[i], peakout_odd[i], fgvbout[i]);
     output[i] = process();
   }
   return;
@@ -61,7 +106,10 @@ void EcalFenixStripFormatEE::process(std::vector<int> &fgvbout,
 
 void EcalFenixStripFormatEE::setParameters(uint32_t id,
                                            const EcalTPGSlidingWindow *&slWin,
-                                           const EcalTPGStripStatus *stripStatus) {
+                                           const EcalTPGStripStatus *stripStatus,
+                                           EcalFenixTPMode TPmode) {
+  // TP mode contains options for the formatter (odd/even filters config)
+  TPmode_= TPmode;
   const EcalTPGSlidingWindowMap &slwinmap = slWin->getMap();
   EcalTPGSlidingWindowMapIterator it = slwinmap.find(id);
   if (it != slwinmap.end())

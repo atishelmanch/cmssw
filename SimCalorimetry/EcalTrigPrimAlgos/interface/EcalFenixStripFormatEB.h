@@ -1,10 +1,10 @@
 #ifndef ECAL_FENIX_STRIP_FORMAT_EB_H
 #define ECAL_FENIX_STRIP_FORMAT_EB_H
 
+#include <SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixTPMode.h>
+
 #include <cstdint>
 #include <vector>
-
-#include <SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixTPMode.h>
 
 class EcalTPGSlidingWindow;
 
@@ -40,6 +40,6 @@ public:
                       std::vector<int> &peakout_odd,
                       std::vector<int> &filtout_odd,
                       std::vector<int> &output);
-  void setParameters(uint32_t &, const EcalTPGSlidingWindow *&, EcalFenixTPMode);
+  void setParameters(uint32_t &, const EcalTPGSlidingWindow *&,  EcalFenixTPMode );
 };
 #endif
