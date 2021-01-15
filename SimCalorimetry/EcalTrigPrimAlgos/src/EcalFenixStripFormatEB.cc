@@ -63,6 +63,7 @@ int EcalFenixStripFormatEB::process() {
   // bit12 is sFGVB, bit13 is for odd>even flagging
   output |= ((inputsFGVB_ & 0x1) << 12);
 
+  // if the flagging mode is OFF the bit stays 0, since it is not used for other things
   if (TPmode_.enable_EB_odd_filter && TPmode_.flag_EB_odd_even_strip ) {
     output |= ((odd_larger & 0x1) << 13);
   }

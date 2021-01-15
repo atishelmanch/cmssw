@@ -49,7 +49,8 @@ private:
 
   // permanent data structures
   std::vector<std::vector<int>> bypasslin_out_;
-  std::vector<int> adder_out_;
+  std::vector<int> adder_even_out_;
+  std::vector<int> adder_odd_out_;
   std::vector<int> maxOf2_out_;
   std::vector<int> fgvb_out_;
   std::vector<int> strip_fgvb_out_;
@@ -100,11 +101,12 @@ public:
                bool isInInnerRings,
                EcalTrigTowerDetId thisTower);
 
-  void process_part1(std::vector<std::vector<int>> &tpframetow, int nStr, int bitMask);
+  void process_part1(std::vector<std::vector<int>> &tpframetow, int nStr, int bitMask, int bitOddEven);
 
   void process_part2_barrel(std::vector<std::vector<int>> &,
                             int nStr,
                             int bitMask,
+                            int bitOddEven,
                             const EcalTPGFineGrainEBGroup *ecaltpgFgEBGroup,
                             const EcalTPGLutGroup *ecaltpgLutGroup,
                             const EcalTPGLutIdMap *ecaltpgLut,
@@ -118,6 +120,7 @@ public:
   void process_part2_endcap(std::vector<std::vector<int>> &,
                             int nStr,
                             int bitMask,
+                            int bitOddEven,
                             const EcalTPGLutGroup *ecaltpgLutGroup,
                             const EcalTPGLutIdMap *ecaltpgLut,
                             const EcalTPGFineGrainTowerEE *ecaltpgFineGrainTowerEE,
