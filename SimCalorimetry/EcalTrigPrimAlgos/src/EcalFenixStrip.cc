@@ -291,7 +291,7 @@ void EcalFenixStrip::process_part2_barrel(uint32_t stripid,
   // call formatter
   this->getFormatterEB()->setParameters(stripid, ecaltpgSlidW, TPmode_);
 
-  this->getFormatterEB()->process(fgvb_out_, even_peak_out_, even_filt_out_, format_out_);
+  this->getFormatterEB()->process(fgvb_out_, even_peak_out_, even_filt_out_, odd_peak_out_, odd_filt_out_, format_out_);
 
   // Duplicate for Odd filter 
   // this->getFormatterEB()->process(odd_fgvb_out_, odd_event_peak_out_, odd_filt_out_, odd_format_out_);
@@ -300,9 +300,9 @@ void EcalFenixStrip::process_part2_barrel(uint32_t stripid,
   if (debug_) {
     std::cout << "output of strip EB formatter is a vector of size: " << format_out_.size() << std::endl;
     std::cout << "value : " << std::endl;
-    for (unsigned int i = 0; i < format_out_.size(); i++) {
-      std::cout << " " << format_out_[i];
-    }
+    for (unsigned int ix = 0; ix < format_out_.size(); ix++) {
+        std::cout << "Clock: " << ix << "  value : " << format_out_[ix] << "  0b"<< std::bitset<13>(format_out_[ix]).to_string()<<   std::endl;
+      }
     std::cout << std::endl;
   }
   return;

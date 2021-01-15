@@ -20,19 +20,26 @@ class EcalTPGSlidingWindow;
 class EcalFenixStripFormatEB {
 private:
   int inputsFGVB_;
-  int inputPeak_;
-  int input_;
+  int inputEvenPeak_;
+  int inputOddPeak_;
+  int input_even_;
+  int input_odd_;
   uint32_t shift_;
   EcalFenixTPMode TPmode_;
   //  int buffer_;
 
-  int setInput(int input, int inputPeak, int inputsFGVB);
+  int setInput(int input_even, int inputEvenPeak, int input_odd, int inputOddPeak, int inputsFGVB);
   int process();
 
 public:
   EcalFenixStripFormatEB();
   virtual ~EcalFenixStripFormatEB();
-  virtual void process(std::vector<int> &, std::vector<int> &, std::vector<int> &, std::vector<int> &);
+  virtual void process(std::vector<int> &sFGVBout,
+                      std::vector<int> &peakout_even,
+                      std::vector<int> &filtout_even,
+                      std::vector<int> &peakout_odd,
+                      std::vector<int> &filtout_odd,
+                      std::vector<int> &output);
   void setParameters(uint32_t &, const EcalTPGSlidingWindow *&, EcalFenixTPMode);
 };
 #endif
