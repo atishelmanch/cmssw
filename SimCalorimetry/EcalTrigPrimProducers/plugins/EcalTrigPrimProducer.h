@@ -49,6 +49,8 @@ private:
   bool barrelOnly_;
   bool tcpFormat_;
   bool debug_;
+  bool TPinfoPrintout_;
+  uint TPmode_;
   bool famos_;
   edm::EDGetTokenT<EBDigiCollection> tokenEB_;
   edm::EDGetTokenT<EEDigiCollection> tokenEE_;
