@@ -17,8 +17,9 @@ EcalFenixTcp::EcalFenixTcp(const edm::EventSetup &setup,
                            bool famos,
                            int binOfMax,
                            int maxNrSamples,
-                           int nbMaxStrips)
-    : debug_(debug), nbMaxStrips_(nbMaxStrips) {
+                           int nbMaxStrips, 
+                           EcalFenixTPMode TPmode)
+    : debug_(debug), nbMaxStrips_(nbMaxStrips), TPmode_(TPmode) {
   bypasslin_.resize(nbMaxStrips_);
   for (int i = 0; i < nbMaxStrips_; i++)
     bypasslin_[i] = new EcalFenixBypassLin();

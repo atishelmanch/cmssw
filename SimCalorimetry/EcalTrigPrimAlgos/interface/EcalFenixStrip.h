@@ -40,7 +40,7 @@ public:
                  int maxNrSamples,
                  int nbMaxXtals,
                  bool TPinfoPrintout,
-                 uint TPmode);
+                 EcalFenixTPMode TPmode);
   virtual ~EcalFenixStrip();
 
 private:

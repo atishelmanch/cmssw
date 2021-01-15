@@ -17,7 +17,7 @@ EcalFenixStrip::EcalFenixStrip(const edm::EventSetup &setup,
                                int maxNrSamples,
                                int nbMaxXtals,
                                bool TPinfoPrintout,
-                               uint TPmode)
+                               EcalFenixTPMode TPmode)
     : theMapping_(theMapping), debug_(debug), famos_(famos), nbMaxXtals_(nbMaxXtals), TPmode_(TPmode) {
   linearizer_.resize(nbMaxXtals_);
   for (int i = 0; i < nbMaxXtals_; i++)

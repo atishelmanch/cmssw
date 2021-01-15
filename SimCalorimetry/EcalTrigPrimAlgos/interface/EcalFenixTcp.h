@@ -8,6 +8,7 @@
 #include <SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixTcpFgvbEE.h>
 #include <SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixTcpFormat.h>
 #include <SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixTcpsFgvbEB.h>
+#include <SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixTPMode.h>
 
 #include <DataFormats/EcalDigi/interface/EBDataFrame.h>
 #include <DataFormats/EcalDigi/interface/EEDataFrame.h>
@@ -33,7 +34,6 @@ class EcalTPGTowerStatus;
 class EcalFenixTcp {
 private:
   bool debug_;
-
   int nbMaxStrips_;
 
   EcalFenixMaxof2 *maxOf2_;
@@ -44,6 +44,8 @@ private:
   EcalFenixTcpsFgvbEB *sfgvbEB_;
 
   EcalFenixTcpFormat *formatter_;
+
+  EcalFenixTPMode TPmode_;
 
   // permanent data structures
   std::vector<std::vector<int>> bypasslin_out_;
@@ -77,7 +79,8 @@ public:
                bool famos,
                int binOfMax,
                int maxNrSamples,
-               int nbMaxStrips);
+               int nbMaxStrips, 
+               EcalFenixTPMode TPmode);
   virtual ~EcalFenixTcp();
 
   void process(const edm::EventSetup &setup,

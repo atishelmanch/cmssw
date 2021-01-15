@@ -28,6 +28,7 @@
 #include "SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixStrip.h"
 #include "SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixTcp.h"
 #include "SimCalorimetry/EcalTrigPrimAlgos/interface/EcalTrigPrimFunctionalAlgo.h"
+#include "SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixTPMode.h"
 
 #include "DataFormats/EcalDetId/interface/EcalSubdetector.h"
 #include "DataFormats/EcalDetId/interface/EcalTrigTowerDetId.h"
@@ -50,7 +51,7 @@ const unsigned int EcalTrigPrimFunctionalAlgo::maxNrTPs_ = 2448;  // FIXME??
 //----------------------------------------------------------------------
 
 EcalTrigPrimFunctionalAlgo::EcalTrigPrimFunctionalAlgo(
-    const edm::EventSetup &setup, int binofmax, bool tcpFormat, bool barrelOnly, bool debug, bool famos, bool TPinfoPrintout, uint TPmode)
+    const edm::EventSetup &setup, int binofmax, bool tcpFormat, bool barrelOnly, bool debug, bool famos, bool TPinfoPrintout, EcalFenixTPMode TPmode)
     : binOfMaximum_(binofmax),
       tcpFormat_(tcpFormat),
       barrelOnly_(barrelOnly),
@@ -84,7 +85,7 @@ void EcalTrigPrimFunctionalAlgo::init(const edm::EventSetup &setup) {
 
   // create main sub algos
   estrip_ = new EcalFenixStrip(setup, theMapping_, debug_, famos_, maxNrSamples_, nbMaxXtals_, TPinfoPrintout_, TPmode_);
-  etcp_ = new EcalFenixTcp(setup, tcpFormat_, debug_, famos_, binOfMaximum_, maxNrSamples_, nbMaxStrips_);
+  etcp_ = new EcalFenixTcp(setup, tcpFormat_, debug_, famos_, binOfMaximum_, maxNrSamples_, nbMaxStrips_,TPmode_);
 
   // initialise data structures
   initStructures(towerMapEB_);
@@ -168,7 +169,6 @@ void EcalTrigPrimFunctionalAlgo::run_part2(
 
   estrip_->getFGVB()->setbadStripMissing(false);
 
-  // Is there a reason this is implemented in the header rather than cc file?
   for (int itow = 0; itow < nrTowers_; ++itow) {
     int index = hitTowers_[itow].first;
     const EcalTrigTowerDetId &thisTower = hitTowers_[itow].second;
@@ -180,9 +180,7 @@ void EcalTrigPrimFunctionalAlgo::run_part2(
                                                             // size; nr of crystals/strip
 
       if ((towerMap[index])[i].first > 0) {
-        // estrip_->process(setup, df, (towerMap[index])[i].first, striptp_[nstr++]);
-        estrip_->process(setup, df, (towerMap[index])[i].first, striptp_[nstr++]);
-        // estrip_->process(setup, df, (towerMap[index])[i].first, odd_striptp_[nstr++],1); // duplicate for odd filter data path. 
+        estrip_->process(setup, df, (towerMap[index])[i].first, striptp_[nstr++]); 
       }
     }  // loop over strips in one tower
 

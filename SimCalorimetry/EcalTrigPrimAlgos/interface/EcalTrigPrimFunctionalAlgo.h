@@ -23,6 +23,7 @@
 
 #include "SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixStrip.h"
 #include "SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixTcp.h"
+#include <SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixTPMode.h>
 
 #include "DataFormats/Common/interface/SortedCollection.h"
 #include "DataFormats/EcalDigi/interface/EcalDigiCollections.h"
@@ -48,7 +49,7 @@ class EcalElectronicsMapping;
 class EcalTrigPrimFunctionalAlgo {
 public:
   explicit EcalTrigPrimFunctionalAlgo(
-      const edm::EventSetup &setup, int binofmax, bool tcpFormat, bool barrelOnly, bool debug, bool famos, bool TPinfoPrintout, uint TPmode);
+      const edm::EventSetup &setup, int binofmax, bool tcpFormat, bool barrelOnly, bool debug, bool famos, bool TPinfoPrintout, EcalFenixTPMode TPmode);
 
   virtual ~EcalTrigPrimFunctionalAlgo();
 
@@ -144,7 +145,7 @@ private:
   bool debug_;
   bool famos_; 
   bool TPinfoPrintout_; 
-  uint TPmode_;
+  EcalFenixTPMode TPmode_;
 
   static const unsigned int nrSamples_;        // nr samples to write, should not be changed since by
                                                // convention the size means that it is coming from simulation
