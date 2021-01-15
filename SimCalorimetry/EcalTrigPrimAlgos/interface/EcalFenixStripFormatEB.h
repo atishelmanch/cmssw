@@ -4,6 +4,8 @@
 #include <cstdint>
 #include <vector>
 
+#include <SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixTPMode.h>
+
 class EcalTPGSlidingWindow;
 
 /**
@@ -21,6 +23,7 @@ private:
   int inputPeak_;
   int input_;
   uint32_t shift_;
+  EcalFenixTPMode TPmode_;
   //  int buffer_;
 
   int setInput(int input, int inputPeak, int inputsFGVB);
@@ -30,6 +33,6 @@ public:
   EcalFenixStripFormatEB();
   virtual ~EcalFenixStripFormatEB();
   virtual void process(std::vector<int> &, std::vector<int> &, std::vector<int> &, std::vector<int> &);
-  void setParameters(uint32_t &, const EcalTPGSlidingWindow *&);
+  void setParameters(uint32_t &, const EcalTPGSlidingWindow *&, EcalFenixTPMode);
 };
 #endif

@@ -112,8 +112,9 @@ void EcalFenixOddAmplitudeFilter::setParameters(uint32_t raw,
     // std::cout << "peak flag settings" << std::endl;
 
     for (int i = 0; i < 5; ++i) {
+      
       weights_[i] = (params_[i] & 0x40) ? (int)(params_[i] | 0xffffffc0) : (int)(params_[i]);
-
+      //std::cout << "ODD weight: "<<  std::dec << params_[i] << " --> " << std::dec << weights_[i] << std::endl;
       // Construct the peakFlag for sFGVB processing
       // peakFlag_[i] = ((params_[i] & 0x80) > 0x0) ? 1 : 0;
       // std::cout << " " << params_[i] << std::endl;

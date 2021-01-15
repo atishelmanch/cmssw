@@ -7,6 +7,7 @@
 #include <SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixLinearizer.h>
 #include <SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixPeakFinder.h>
 #include <SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixStripFgvbEE.h>
+#include <SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixTPMode.h>
 
 #include "DataFormats/EcalDetId/interface/EcalTriggerElectronicsId.h"
 #include "FWCore/Framework/interface/ESHandle.h"
@@ -48,7 +49,7 @@ private:
   bool famos_;
   int nbMaxXtals_; 
   bool TPinfoPrintout_;
-  uint TPmode_;
+  EcalFenixTPMode TPmode_;
   std::vector<EcalFenixLinearizer *> linearizer_;
   EcalFenixAmplitudeFilter *amplitude_filter_;
   EcalFenixOddAmplitudeFilter *oddAmplitude_filter_;
@@ -96,9 +97,6 @@ private:
 
   bool identif_;
   
-  bool use_odd_filter_ = false;
-  bool use_odd_peak_finder_ = false;
-  bool disable_even_peak_finder_ = false;
 
   
 public:
