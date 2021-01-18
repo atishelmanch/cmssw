@@ -6,7 +6,8 @@
 #include <SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixFgvbEB.h>
 #include <SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixMaxof2.h>
 #include <SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixTcpFgvbEE.h>
-#include <SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixTcpFormat.h>
+#include <SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixTcpFormatEE.h>
+#include <SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixTcpFormatEB.h>
 #include <SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixTcpsFgvbEB.h>
 #include <SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixTPMode.h>
 
@@ -43,7 +44,8 @@ private:
   EcalFenixTcpFgvbEE *fgvbEE_;
   EcalFenixTcpsFgvbEB *sfgvbEB_;
 
-  EcalFenixTcpFormat *formatter_;
+  EcalFenixTcpFormatEB *formatter_EB_;
+  EcalFenixTcpFormatEE *formatter_EE_;
 
   EcalFenixTPMode TPmode_;
 
@@ -133,7 +135,8 @@ public:
   EcalFenixBypassLin *getBypasslin(int i) const { return bypasslin_[i]; }
   EcalFenixEtTot *getAdder() const { return adder_; }
   EcalFenixMaxof2 *getMaxOf2() const { return maxOf2_; }
-  EcalFenixTcpFormat *getFormatter() const { return formatter_; }
+  EcalFenixTcpFormatEB *getFormatterEB() const { return formatter_EB_; }
+  EcalFenixTcpFormatEE *getFormatterEE() const { return formatter_EE_; }
   EcalFenixFgvbEB *getFGVBEB() const { return fgvbEB_; }
   EcalFenixTcpFgvbEE *getFGVBEE() const { return fgvbEE_; }
   EcalFenixTcpsFgvbEB *getsFGVBEB() const { return sfgvbEB_; }

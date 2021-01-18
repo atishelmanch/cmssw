@@ -25,7 +25,8 @@ EcalFenixTcp::EcalFenixTcp(const edm::EventSetup &setup,
     bypasslin_[i] = new EcalFenixBypassLin();
   adder_ = new EcalFenixEtTot();
   maxOf2_ = new EcalFenixMaxof2(maxNrSamples, nbMaxStrips_);
-  formatter_ = new EcalFenixTcpFormat(tcpFormat, debug_, famos, binOfMax);
+  formatter_EB_ = new EcalFenixTcpFormatEB(tcpFormat, debug_, famos, binOfMax);
+  formatter_EE_ = new EcalFenixTcpFormatEE(tcpFormat, debug_, famos, binOfMax);
   fgvbEB_ = new EcalFenixFgvbEB(maxNrSamples);
   fgvbEE_ = new EcalFenixTcpFgvbEE(maxNrSamples);
   sfgvbEB_ = new EcalFenixTcpsFgvbEB();
@@ -48,7 +49,8 @@ EcalFenixTcp::~EcalFenixTcp() {
     delete bypasslin_[i];
   delete adder_;
   delete maxOf2_;
-  delete formatter_;
+  delete formatter_EB_;
+  delete formatter_EE_;
   delete fgvbEB_;
   delete fgvbEE_;
 }
@@ -123,6 +125,7 @@ void EcalFenixTcp::process_part1(std::vector<std::vector<int>> &tpframetow, int 
     for (unsigned int i = 0; i < adder_even_out_.size(); i++) {
       std::cout << " " << adder_even_out_[i];
     }
+    std::cout << std::endl;
     std::cout << "odd value : " << std::endl;
     for (unsigned int i = 0; i < adder_odd_out_.size(); i++) {
       std::cout << " " << adder_odd_out_[i];
@@ -146,7 +149,8 @@ void EcalFenixTcp::process_part2_barrel(std::vector<std::vector<int>> &bypasslin
                                         std::vector<EcalTriggerPrimitiveSample> &tcp_outTcc,
                                         EcalTrigTowerDetId towid) {
   // call maxof2
-  //  this->getMaxOf2()->process(bypasslin_out_,nStr,maxOf2_out_);
+  // this->getMaxOf2()->process(bypasslin_out_,nStr,maxOf2_out_);
+  // the oddEven flag is used to exclude "odd" strip from the computation of the maxof2 as in the fenix firmware
   this->getMaxOf2()->process(bypasslinout, nStr, bitMask, bitOddEven, maxOf2_out_);
   // this is a test:
   if (debug_) {
@@ -161,6 +165,7 @@ void EcalFenixTcp::process_part2_barrel(std::vector<std::vector<int>> &bypasslin
   // call fgvb
 
   this->getFGVBEB()->setParameters(towid.rawId(), ecaltpgFgEBGroup, ecaltpgFineGrainEB);
+  // The FGVB is computed only on the even sum, as in the firmware
   this->getFGVBEB()->process(adder_even_out_, maxOf2_out_, fgvb_out_);
 
   // Call sFGVB
@@ -179,8 +184,8 @@ void EcalFenixTcp::process_part2_barrel(std::vector<std::vector<int>> &bypasslin
   // call formatter
   int eTTotShift = 2;
 
-  this->getFormatter()->setParameters(towid.rawId(), ecaltpgLutGroup, ecaltpgLut, ecaltpgBadTT, ecaltpgSpike);
-  this->getFormatter()->process(adder_even_out_, fgvb_out_, strip_fgvb_out_, eTTotShift, tcp_out, tcp_outTcc, false);
+  this->getFormatterEB()->setParameters(towid.rawId(), ecaltpgLutGroup, ecaltpgLut, ecaltpgBadTT, ecaltpgSpike, TPmode_);
+  this->getFormatterEB()->process(adder_even_out_,adder_odd_out_, fgvb_out_, strip_fgvb_out_, eTTotShift, tcp_out, tcp_outTcc, false);
   // this is a test:
   if (debug_) {
     std::cout << "output of TCP formatter Barrel is a vector of size: " << std::dec << tcp_out.size() << std::endl;
@@ -218,14 +223,15 @@ void EcalFenixTcp::process_part2_endcap(std::vector<std::vector<int>> &bypasslin
   //  fgvbEE_->process(bypasslin_out_,nStr,bitMask,fgvb_out_);
   fgvbEE_->process(bypasslinout, nStr, bitMask, fgvb_out_);
 
+
   // call formatter
   int eTTotShift = 2;  // Pascal: endcap has 12 bits as in EB (bug in FENIX!!!!)
                        // so shift must be applied to just keep [11:2]
 
-  this->getFormatter()->setParameters(towid.rawId(), ecaltpgLutGroup, ecaltpgLut, ecaltpgbadTT, nullptr);
+  this->getFormatterEE()->setParameters(towid.rawId(), ecaltpgLutGroup, ecaltpgLut, ecaltpgbadTT, nullptr, TPmode_);
 
-  this->getFormatter()->process(
-      adder_even_out_, fgvb_out_, strip_fgvb_out_, eTTotShift, tcp_out, tcp_outTcc, isInInnerRings);
+  // Only the even sum is passed to the endcap formatter for the moment. 
+  this->getFormatterEE()->process(adder_even_out_, fgvb_out_, strip_fgvb_out_, eTTotShift, tcp_out, tcp_outTcc, isInInnerRings);
   // this is a test:
   if (debug_) {
     std::cout << "output of TCP formatter(endcap) is a vector of size: " << std::dec << tcp_out.size() << std::endl;

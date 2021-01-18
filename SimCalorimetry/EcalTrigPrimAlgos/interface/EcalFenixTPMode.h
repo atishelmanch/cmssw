@@ -28,6 +28,9 @@ public:
     EB_strip_formatter_output =  (TPmode_ >> 9) & 0x3;
     if ( (TPmode_ >> 11) & 0x1) flag_EB_odd_even_strip =  true;
 
+    EB_tcp_formatter_output =  (TPmode_ >> 12) & 0x3;
+    if ( (TPmode_ >> 14) & 0x1) flag_EB_odd_even_tcp =  true;
+
   };
 
 private:
@@ -45,6 +48,8 @@ public:
   int EB_strip_formatter_output = 0;  // 0 = even filter,  1 = odd filter, 2 = larger of the two, 3 = odd + even
   bool flag_EE_odd_even_strip = false;  // flag that odd amplitude > even amplitude 
   bool flag_EB_odd_even_strip = false;
+  int EB_tcp_formatter_output = 0;  // 0 = even filter,  1 = larger of the two, 2 = odd + even
+  bool flag_EB_odd_even_tcp = false;
 
   void print(){
     std::cout << ">>> Trigger primitive mode:  0b"<< std::bitset<15>(TPmode_).to_string() << std::endl;
@@ -64,6 +69,10 @@ public:
     if (EB_strip_formatter_output == 3) std::cout << "    EB strip formatter output: odd + even " << std::endl;
     std::cout << "    Flag EE odd>even strip  "<< flag_EE_odd_even_strip << std::endl;
     std::cout << "    Flag EB odd>even strip  "<< flag_EB_odd_even_strip << std::endl;
+    if (EB_tcp_formatter_output == 0) std::cout << "    EB tcp formatter output: even filter " << std::endl;
+    if (EB_tcp_formatter_output == 1) std::cout << "    EB tcp formatter output: larger of odd and even " << std::endl;
+    if (EB_tcp_formatter_output == 2) std::cout << "    EB tcp formatter output: even + odd " << std::endl;
+    std::cout << "    Flag EB odd>even TCP  "<< flag_EB_odd_even_tcp << std::endl;
   };
 
   

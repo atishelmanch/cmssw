@@ -3,35 +3,36 @@
 #include "CondFormats/EcalObjects/interface/EcalTPGSpike.h"
 #include "CondFormats/EcalObjects/interface/EcalTPGTowerStatus.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
-#include <SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixTcpFormat.h>
+#include <SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixTcpFormatEB.h>
 #include <iostream>
 
 using namespace std;
 
-EcalFenixTcpFormat::EcalFenixTcpFormat(bool tcpFormat, bool debug, bool famos, int binOfMax)
+EcalFenixTcpFormatEB::EcalFenixTcpFormatEB(bool tcpFormat, bool debug, bool famos, int binOfMax)
     : tcpFormat_(tcpFormat), debug_(debug), famos_(famos), binOfMax_(binOfMax) {
   status_ = 0;
   badTTStatus_ = &status_;
 }
 
-EcalFenixTcpFormat::~EcalFenixTcpFormat() {}
+EcalFenixTcpFormatEB::~EcalFenixTcpFormatEB() {}
 
-void EcalFenixTcpFormat::process(std::vector<int> &Et,
-                                 std::vector<int> &fgvb,
-                                 std::vector<int> &sfgvb,
-                                 int eTTotShift,
-                                 std::vector<EcalTriggerPrimitiveSample> &out,
-                                 std::vector<EcalTriggerPrimitiveSample> &out2,
-                                 bool isInInnerRings) {
+void EcalFenixTcpFormatEB::process(std::vector<int> &Et_even_sum,
+                                   std::vector<int> &Et_odd_sum,
+                                   std::vector<int> &fgvb,
+                                   std::vector<int> &sfgvb,
+                                   int eTTotShift,
+                                   std::vector<EcalTriggerPrimitiveSample> &out,
+                                   std::vector<EcalTriggerPrimitiveSample> &out2,
+                                   bool isInInnerRings) {
   // put TP-s in the output
   // on request also in TcpFormat
   // for famos version we have to write dummies except for the middle
 
-  int myEt;
+  int myEt = 0;
   if (famos_) {
     for (unsigned int i = 0; i < out.size(); ++i) {
       if (i == binOfMax_ - 1) {
-        myEt = Et[0] >> eTTotShift;
+        myEt = Et_even_sum[0] >> eTTotShift;
         if (myEt > 0x3ff)
           myEt = 0x3ff;
         if (isInInnerRings)
@@ -52,15 +53,36 @@ void EcalFenixTcpFormat::process(std::vector<int> &Et,
         out[i] = EcalTriggerPrimitiveSample();
     }
   } else {
-    for (unsigned int i = 0; i < Et.size(); ++i) {
+    for (unsigned int i = 0; i < Et_even_sum.size(); ++i) {
       int myFgvb = fgvb[i];
       int mysFgvb = sfgvb[i];
       // myEt=Et[i]>>eTTotShift;
       // if (myEt>0x3ff) myEt=0x3ff ;
       // if (isInInnerRings) myEt = myEt /2 ;
 
+      bool is_odd_larger = false;
+      switch(TPmode_.EB_tcp_formatter_output){
+        case 0: //output even sum
+        myEt = Et_even_sum[i];
+        break;
+        case 1: // output larger of odd and even 
+        if (Et_odd_sum[i]<Et_even_sum[i]){
+          myEt = Et_odd_sum[i];
+          is_odd_larger = true;
+        }else{
+          myEt = Et_even_sum[i];
+        }
+        break;
+        case 2: // output even+odd 
+        myEt = Et_even_sum[i] + Et_odd_sum[i];
+        break;
+      }
+
+      int infobit1 = myFgvb;
+      if (TPmode_.flag_EB_odd_even_tcp) infobit1 = is_odd_larger;
+
       // bug fix 091009:
-      myEt = Et[i];
+      //myEt = Et[i];
       if (myEt > 0xfff)
         myEt = 0xfff;
       if (isInInnerRings)
@@ -82,19 +104,20 @@ void EcalFenixTcpFormat::process(std::vector<int> &Et,
 
       int ttFlag = (lut_out & 0x700) >> 8;
       if (tcpFormat_) {
-        out2[i] = EcalTriggerPrimitiveSample(((ttFlag & 0x7) << 11) | ((myFgvb & 0x1) << 10) | (myEt & 0x3ff));
+        out2[i] = EcalTriggerPrimitiveSample(((ttFlag & 0x7) << 11) | ((infobit1 & 0x1) << 10) | (myEt & 0x3ff));
       }
       myEt = lut_out & 0xff;
-      out[i] = EcalTriggerPrimitiveSample(myEt, myFgvb, mysFgvb, ttFlag);
+      out[i] = EcalTriggerPrimitiveSample(myEt, infobit1, mysFgvb, ttFlag);
     }
   }
 }
 
-void EcalFenixTcpFormat::setParameters(uint32_t towid,
+void EcalFenixTcpFormatEB::setParameters(uint32_t towid,
                                        const EcalTPGLutGroup *ecaltpgLutGroup,
                                        const EcalTPGLutIdMap *ecaltpgLut,
                                        const EcalTPGTowerStatus *ecaltpgbadTT,
-                                       const EcalTPGSpike *ecaltpgSpike) {
+                                       const EcalTPGSpike *ecaltpgSpike,
+                                       EcalFenixTPMode TPmode) {
   // Get TP zeroing threshold - defaut to 1023 for old data (no record found or
   // EE)
   spikeZeroThresh_ = 1023;
@@ -125,4 +148,6 @@ void EcalFenixTcpFormat::setParameters(uint32_t towid,
   if (itbadTT != badTTMap.end()) {
     badTTStatus_ = &(*itbadTT).second;
   }
+
+  TPmode_ = TPmode;
 }
