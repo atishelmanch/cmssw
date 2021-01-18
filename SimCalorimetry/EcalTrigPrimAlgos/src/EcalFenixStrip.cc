@@ -297,7 +297,7 @@ void EcalFenixStrip::process_part2_barrel(uint32_t stripid,
     std::cout << "output of strip EB formatter is a vector of size: " << format_out_.size() << std::endl;
     std::cout << "value : " << std::endl;
     for (unsigned int ix = 0; ix < format_out_.size(); ix++) {
-        std::cout << "Clock: " << ix << "  value : " << format_out_[ix] << "  0b"<< std::bitset<13>(format_out_[ix]).to_string()<<   std::endl;
+        std::cout << "Clock: " << ix << "  value : " << format_out_[ix] << "  0b"<< std::bitset<14>(format_out_[ix]).to_string()<<   std::endl;
       }
     std::cout << std::endl;
   }

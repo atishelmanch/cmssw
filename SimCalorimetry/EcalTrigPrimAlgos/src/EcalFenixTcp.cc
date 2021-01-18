@@ -120,13 +120,13 @@ void EcalFenixTcp::process_part1(std::vector<std::vector<int>> &tpframetow, int 
   this->getAdder()->process(tpframetow, nStr, bitMask, bitOddEven, adder_even_out_, adder_odd_out_);
   // this is a test:
   if (debug_) {
-    std::cout << "output of adder is a vector of size: " << adder_even_out_.size() << std::endl;
-    std::cout << "even value : " << std::endl;
+    std::cout << "output of TCP adder is a vector of size: " << adder_even_out_.size() << std::endl;
+    std::cout << "even sum : " << std::endl;
     for (unsigned int i = 0; i < adder_even_out_.size(); i++) {
       std::cout << " " << adder_even_out_[i];
     }
     std::cout << std::endl;
-    std::cout << "odd value : " << std::endl;
+    std::cout << "odd sum : " << std::endl;
     for (unsigned int i = 0; i < adder_odd_out_.size(); i++) {
       std::cout << " " << adder_odd_out_[i];
     }
@@ -163,7 +163,6 @@ void EcalFenixTcp::process_part2_barrel(std::vector<std::vector<int>> &bypasslin
   }
 
   // call fgvb
-
   this->getFGVBEB()->setParameters(towid.rawId(), ecaltpgFgEBGroup, ecaltpgFineGrainEB);
   // The FGVB is computed only on the even sum, as in the firmware
   this->getFGVBEB()->process(adder_even_out_, maxOf2_out_, fgvb_out_);
@@ -185,13 +184,13 @@ void EcalFenixTcp::process_part2_barrel(std::vector<std::vector<int>> &bypasslin
   int eTTotShift = 2;
 
   this->getFormatterEB()->setParameters(towid.rawId(), ecaltpgLutGroup, ecaltpgLut, ecaltpgBadTT, ecaltpgSpike, TPmode_);
-  this->getFormatterEB()->process(adder_even_out_,adder_odd_out_, fgvb_out_, strip_fgvb_out_, eTTotShift, tcp_out, tcp_outTcc, false);
+  this->getFormatterEB()->process(adder_even_out_, adder_odd_out_, fgvb_out_, strip_fgvb_out_, eTTotShift, tcp_out, tcp_outTcc, false);
   // this is a test:
   if (debug_) {
     std::cout << "output of TCP formatter Barrel is a vector of size: " << std::dec << tcp_out.size() << std::endl;
     std::cout << "value : " << std::endl;
     for (unsigned int i = 0; i < tcp_out.size(); i++) {
-      std::cout << " " << i << " " << std::dec << tcp_out[i];
+      std::cout << " " << i << " " << std::dec << tcp_out[i] << std::endl;
     }
     std::cout << std::endl;
   }

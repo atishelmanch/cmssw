@@ -56,31 +56,33 @@ void EcalFenixTcpFormatEB::process(std::vector<int> &Et_even_sum,
     for (unsigned int i = 0; i < Et_even_sum.size(); ++i) {
       int myFgvb = fgvb[i];
       int mysFgvb = sfgvb[i];
-      // myEt=Et[i]>>eTTotShift;
-      // if (myEt>0x3ff) myEt=0x3ff ;
-      // if (isInInnerRings) myEt = myEt /2 ;
-
+      
+      //std::cout << "Mode "<< TPmode_.EB_tcp_formatter_output << " even sum " << Et_even_sum[i] << " odd sum "<<Et_odd_sum[i] << std::endl;
       bool is_odd_larger = false;
       switch(TPmode_.EB_tcp_formatter_output){
         case 0: //output even sum
-        myEt = Et_even_sum[i];
-        break;
-        case 1: // output larger of odd and even 
-        if (Et_odd_sum[i]<Et_even_sum[i]){
-          myEt = Et_odd_sum[i];
-          is_odd_larger = true;
-        }else{
           myEt = Et_even_sum[i];
-        }
-        break;
+          break;
+        case 1: // output larger of odd and even 
+          if (Et_odd_sum[i]>Et_even_sum[i]){
+            myEt = Et_odd_sum[i];
+            is_odd_larger = true;
+            
+          }else{
+            myEt = Et_even_sum[i];
+          }
+          break;
         case 2: // output even+odd 
-        myEt = Et_even_sum[i] + Et_odd_sum[i];
-        break;
+          myEt = Et_even_sum[i] + Et_odd_sum[i];
+          break;
       }
 
+      //std::cout << "MyET "<< myEt << "; is odd larger "<< is_odd_larger << std::endl;
+      // check TPmode config to decide if output the FGVB or the odd>even flag
       int infobit1 = myFgvb;
       if (TPmode_.flag_EB_odd_even_tcp) infobit1 = is_odd_larger;
 
+      
       // bug fix 091009:
       //myEt = Et[i];
       if (myEt > 0xfff)
