@@ -53,8 +53,8 @@ public:
 
   void print(){
     std::cout << ">>> Trigger primitive mode:  0b"<< std::bitset<15>(TPmode_).to_string() << std::endl;
-    std::cout << "    enable EE odd filter  "<< enable_EE_odd_peak_finder << std::endl;
-    std::cout << "    enable EB odd filter  "<< enable_EB_odd_peak_finder << std::endl;
+    std::cout << "    enable EE odd filter  "<< enable_EE_odd_filter << std::endl;
+    std::cout << "    enable EB odd filter  "<< enable_EB_odd_filter << std::endl;
     std::cout << "    enable EE odd peak finder  "<< enable_EE_odd_peak_finder << std::endl;
     std::cout << "    enable EB odd peak finder  "<< enable_EB_odd_peak_finder << std::endl;
     std::cout << "    disable EE even peak finder  "<< disable_EE_even_peak_finder << std::endl;
