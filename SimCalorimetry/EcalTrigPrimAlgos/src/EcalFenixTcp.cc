@@ -1,5 +1,4 @@
 #include <SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixTcp.h>
-#include <SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixTcpFormat.h>
 
 #include "CondFormats/EcalObjects/interface/EcalTPGFineGrainEBGroup.h"
 #include "CondFormats/EcalObjects/interface/EcalTPGFineGrainEBIdMap.h"
