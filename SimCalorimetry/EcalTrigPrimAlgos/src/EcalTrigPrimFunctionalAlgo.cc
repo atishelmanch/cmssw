@@ -170,6 +170,10 @@ void EcalTrigPrimFunctionalAlgo::run_part2(
   estrip_->getFGVB()->setbadStripMissing(false);
 
   for (int itow = 0; itow < nrTowers_; ++itow) {
+    if(debug_){
+      std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl; 
+      std::cout << "on Tower " << itow << " of " << nrTowers_ << std::endl;
+    } 
     int index = hitTowers_[itow].first;
     const EcalTrigTowerDetId &thisTower = hitTowers_[itow].second;
 
@@ -180,6 +184,10 @@ void EcalTrigPrimFunctionalAlgo::run_part2(
                                                             // size; nr of crystals/strip
 
       if ((towerMap[index])[i].first > 0) {
+        if(debug_){
+          std::cout << "-------------------------------------------------" << std::endl; 
+          std::cout << "on Strip " << i << std::endl;
+        }         
         estrip_->process(setup, df, (towerMap[index])[i].first, striptp_[nstr++]); 
       }
     }  // loop over strips in one tower

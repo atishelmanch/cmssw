@@ -45,7 +45,9 @@ int EcalFenixStripFormatEE::process() {
 
   // Prepare the amplitude output for the strip looking at the TPmode options
   int output = 0;
-  bool odd_larger = false;
+  bool is_odd_larger = false;
+
+  if (TPmode_.enable_EE_odd_filter && odd_output > even_output) is_odd_larger = true; // If running with odd filter enabled, check if odd output is larger regardless of strip formatter output mode 
   switch(TPmode_.EE_strip_formatter_output){
     case 0: // even filter out
       output = even_output;  
@@ -57,7 +59,6 @@ int EcalFenixStripFormatEE::process() {
     case 2: // larger between odd and even
       if (TPmode_.enable_EE_odd_filter && odd_output > even_output) {
         output = odd_output;
-        odd_larger = true;
       }
       else output = even_output;
       break;
@@ -76,8 +77,8 @@ int EcalFenixStripFormatEE::process() {
   // bit12 is sFGVB, bit13 is for odd>even flagging
   output |= ((fgvb_ & 0x1) << 12);
 
-  if (TPmode_.enable_EE_odd_filter && TPmode_.flag_EB_odd_even_strip ) {
-    output |= ((odd_larger & 0x1) << 13);
+  if (TPmode_.enable_EE_odd_filter && TPmode_.flag_EE_odd_even_strip ) { 
+    output |= ((is_odd_larger & 0x1) << 13);
   }
 
   return output;

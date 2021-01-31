@@ -63,7 +63,6 @@ EcalFenixStrip::~EcalFenixStrip() {
   delete fgvbEE_;
 }
 
-// void process(const edm::EventSetup &setup, std::vector<EBDataFrame> &samples, int nrXtals, std::vector<int> &out, bool OddFilter) {
 void EcalFenixStrip::process(const edm::EventSetup &setup, std::vector<EBDataFrame> &samples, int nrXtals, std::vector<int> &out) {
   
   // now call processing
@@ -107,7 +106,6 @@ void EcalFenixStrip::process(const edm::EventSetup &setup, std::vector<EBDataFra
   
 }
 
-// void process(const edm::EventSetup &setup, std::vector<EEDataFrame> &samples, int nrXtals, std::vector<int> &out, bool OddFilter) {
 void EcalFenixStrip::process(const edm::EventSetup &setup, std::vector<EEDataFrame> &samples, int nrXtals, std::vector<int> &out) { 
   // now call processing
   if (samples.empty()) {
@@ -132,15 +130,13 @@ void EcalFenixStrip::process(const edm::EventSetup &setup, std::vector<EEDataFra
                 ecaltpgBadX_);  // templated part
   process_part2_endcap(stripid, ecaltpgSlidW_, ecaltpgFgStripEE_, ecaltpgStripStatus_);
   out = format_out_; // FIXME: timing
-  // if(OddFilter) out = odd_format_out_;
-  // else out = format_out_; // FIXME: timing
   return;
 }
 
 /*
 * strip level processing - part1. 
 * The linearizer and adder are run only once. 
-* Then the even and odd filters and peak finder are run looking at the TPmode fla
+* Then the even and odd filters and peak finder are run looking at the TPmode flag
 */
 template <class T>
 void EcalFenixStrip::process_part1(int identif,
@@ -164,7 +160,7 @@ void EcalFenixStrip::process_part1(int identif,
     
     if (debug_) {
       std::cout << std::endl;
-      std::cout << "cryst= " << cryst << " EBDataFrame/EEDataFrame is: " << std::endl;
+      std::cout << "crystal " << cryst << " EBDataFrame/EEDataFrame is (ADC counts): " << std::endl;
       for (int i = 0; i < df[cryst].size(); i++) {
         std::cout << " " << std::dec << df[cryst][i].adc();
       }
@@ -181,7 +177,7 @@ void EcalFenixStrip::process_part1(int identif,
               << nrXtals << std::endl;
     for (int ix = 0; ix < nrXtals; ix++) {
       std::cout << "cryst: " << ix << "  value : " << std::dec << std::endl;
-      std::cout << " lin_out[ix].size()= " << std::dec << lin_out_[ix].size() << std::endl;
+      std::cout << " lin_out[ix].size() = " << std::dec << lin_out_[ix].size() << std::endl;
       for (unsigned int i = 0; i < lin_out_[ix].size(); i++) {
         std::cout << " " << std::dec << (lin_out_[ix])[i];
       }
@@ -287,10 +283,8 @@ void EcalFenixStrip::process_part2_barrel(uint32_t stripid,
   // this->getFGVB()->setParameters(stripid,ecaltpgFgStripEE);
   // this->getFGVB()->process(lin_out_,fgvb_out_);
 
-
   // call formatter
   this->getFormatterEB()->setParameters(stripid, ecaltpgSlidW, TPmode_);
-
   this->getFormatterEB()->process(fgvb_out_, even_peak_out_, even_filt_out_, odd_peak_out_, odd_filt_out_, format_out_);
 
   if (debug_) {
@@ -312,7 +306,6 @@ void EcalFenixStrip::process_part2_endcap(uint32_t stripid,
   // this->getFGVB()->setParameters(stripid,ecaltpgFgStripEE);
   // this->getFGVB()->process(lin_out_,fgvb_out_);
 
-
   // call formatter
   this->getFormatterEE()->setParameters(stripid, ecaltpgSlidW, ecaltpgStripStatus, TPmode_);
   this->getFormatterEE()->process(fgvb_out_, even_peak_out_, even_filt_out_,  odd_peak_out_, odd_filt_out_, format_out_);
@@ -321,7 +314,7 @@ void EcalFenixStrip::process_part2_endcap(uint32_t stripid,
     std::cout << "output of strip EE formatter is a vector of size: " << format_out_.size() << std::endl;
     std::cout << "value : " << std::endl;
     for (unsigned int ix = 0; ix < format_out_.size(); ix++) {
-        std::cout << "Clock: " << ix << "  value : " << format_out_[ix] << "  0b"<< std::bitset<13>(format_out_[ix]).to_string()<<   std::endl;
+        std::cout << "Clock: " << ix << "  value : " << format_out_[ix] << "  0b"<< std::bitset<14>(format_out_[ix]).to_string()<<   std::endl;
       }
     std::cout << std::endl;
   }

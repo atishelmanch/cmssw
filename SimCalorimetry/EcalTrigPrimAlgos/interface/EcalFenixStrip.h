@@ -81,9 +81,6 @@ private:
   std::vector<int> fgvb_out_;
   std::vector<int> fgvb_out_temp_;
 
-  
- 
-
   const EcalTPGPedestals *ecaltpPed_;
   const EcalTPGLinearizationConst *ecaltpLin_;
   const EcalTPGWeightIdMap *ecaltpgWeightMap_;
@@ -96,8 +93,6 @@ private:
   const EcalTPGStripStatus *ecaltpgStripStatus_;
 
   bool identif_;
-  
-
   
 public:
   void setPointers(const EcalTPGPedestals *ecaltpPed,
@@ -126,7 +121,6 @@ public:
   // process method is splitted in 2 parts:
   //   the first one is templated, the same except input
   //   the second part is slightly different for barrel/endcap
-
 
   template <class T>
   void process(const edm::EventSetup &, std::vector<const T> &, int nrxtals, std::vector<int> &out);

@@ -151,7 +151,7 @@ void EcalFenixTcp::process_part2_barrel(std::vector<std::vector<int>> &bypasslin
   // this->getMaxOf2()->process(bypasslin_out_,nStr,maxOf2_out_);
   // the oddEven flag is used to exclude "odd" strip from the computation of the maxof2 as in the fenix firmware
   this->getMaxOf2()->process(bypasslinout, nStr, bitMask, bitOddEven, maxOf2_out_);
-  // this is a test:
+  
   if (debug_) {
     std::cout << "output of maxof2 is a vector of size: " << maxOf2_out_.size() << std::endl;
     std::cout << "value : " << std::endl;

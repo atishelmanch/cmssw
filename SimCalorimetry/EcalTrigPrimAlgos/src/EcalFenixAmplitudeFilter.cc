@@ -76,7 +76,14 @@ void EcalFenixAmplitudeFilter::process() {
 
   if(TPinfoPrintout_) std::cout<<" "<<stripid_;
   for (int i = 0; i < 5; i++) {
+    // if(TPinfoPrintout_){
+      // std::cout << std::endl; 
+      // std::cout << "Even w * d contribution " << i << ": " << (weights_[i] * buffer_[i]) / (64.) << std::endl; 
+    // }
     output += (weights_[i] * buffer_[i]) >> shift_;
+    // if(TPinfoPrintout_){
+      // std::cout << "output: " << output << std::endl; 
+    // }    
     if ((fgvbBuffer_[i] == 1 && i == 3) || fgvbInt == 1) {
       fgvbInt = 1;
     }
