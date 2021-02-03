@@ -186,7 +186,7 @@ void EcalTrigPrimFunctionalAlgo::run_part2(
       if ((towerMap[index])[i].first > 0) {
         if(debug_){
           std::cout << "-------------------------------------------------" << std::endl; 
-          std::cout << "on Strip " << i << std::endl;
+          std::cout << "on Strip index " << i << std::endl;
         }         
         estrip_->process(setup, df, (towerMap[index])[i].first, striptp_[nstr++]); 
       }

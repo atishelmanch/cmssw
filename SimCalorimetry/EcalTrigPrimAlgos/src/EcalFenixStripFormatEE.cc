@@ -47,17 +47,17 @@ int EcalFenixStripFormatEE::process() {
   int output = 0;
   bool is_odd_larger = false;
 
-  if (TPmode_.enable_EE_odd_filter && odd_output > even_output) is_odd_larger = true; // If running with odd filter enabled, check if odd output is larger regardless of strip formatter output mode 
+  if (TPmode_.enable_EE_odd_filter && (odd_output > even_output) ) is_odd_larger = true; // If running with odd filter enabled, check if odd output is larger regardless of strip formatter output mode 
   switch(TPmode_.EE_strip_formatter_output){
     case 0: // even filter out
       output = even_output;  
       break;
     case 1: // odd filter out
-      if (TPmode_.enable_EE_odd_filter)  output = odd_output;
+      if (TPmode_.enable_EE_odd_filter) output = odd_output;
       else output = even_output;
       break;
     case 2: // larger between odd and even
-      if (TPmode_.enable_EE_odd_filter && odd_output > even_output) {
+      if (TPmode_.enable_EE_odd_filter && (odd_output > even_output) ) {
         output = odd_output;
       }
       else output = even_output;
@@ -97,7 +97,9 @@ void EcalFenixStripFormatEE::process(std::vector<int> &fgvbout,
                                   "have the same size";
     std::cout << " Size peak_out" << peakout_even.size() << ", size filt_out:" << filtout_even.size() << std::flush << std::endl;
   }
+
   for (unsigned int i = 0; i < filtout_even.size(); i++) {
+    // std::cout << "Clock: " << i << std::endl; 
     setInput(filtout_even[i], peakout_even[i],filtout_odd[i], peakout_odd[i], fgvbout[i]);
     output[i] = process();
   }

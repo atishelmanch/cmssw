@@ -53,6 +53,7 @@ void EcalFenixTcpFormatEB::process(std::vector<int> &Et_even_sum,
         out[i] = EcalTriggerPrimitiveSample();
     }
   } else {
+      
     for (unsigned int i = 0; i < Et_even_sum.size(); ++i) {
       int myFgvb = fgvb[i];
       int mysFgvb = sfgvb[i];
@@ -74,7 +75,7 @@ void EcalFenixTcpFormatEB::process(std::vector<int> &Et_even_sum,
             myEt = Et_even_sum[i];
           }
           break;
-        case 2: // output even+odd 
+        case 3: // output even+odd 
           myEt = Et_even_sum[i] + Et_odd_sum[i];
           break;
       }
