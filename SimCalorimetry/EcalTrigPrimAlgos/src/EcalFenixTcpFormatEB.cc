@@ -75,7 +75,7 @@ void EcalFenixTcpFormatEB::process(std::vector<int> &Et_even_sum,
             myEt = Et_even_sum[i];
           }
           break;
-        case 3: // output even+odd 
+        case 2: // output even+odd 
           myEt = Et_even_sum[i] + Et_odd_sum[i];
           break;
       }
