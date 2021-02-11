@@ -114,6 +114,9 @@
 #include "CondFormats/EcalObjects/interface/EcalTPGOddWeightIdMap.h"
 #include "CondFormats/DataRecord/interface/EcalTPGOddWeightIdMapRcd.h"
 
+#include "CondFormats/EcalObjects/interface/EcalTPGTPMode.h"
+#include "CondFormats/DataRecord/interface/EcalTPGTPModeRcd.h"
+
 #include "CondFormats/EcalObjects/interface/EcalTPGCrystalStatus.h"
 #include "CondFormats/DataRecord/interface/EcalTPGCrystalStatusRcd.h"
 
@@ -215,6 +218,9 @@ REGISTER_PLUGIN(EcalTPGWeightGroupRcd, EcalTPGWeightGroup);
 REGISTER_PLUGIN(EcalTPGWeightIdMapRcd, EcalTPGWeightIdMap);
 REGISTER_PLUGIN(EcalTPGOddWeightGroupRcd, EcalTPGOddWeightGroup);
 REGISTER_PLUGIN(EcalTPGOddWeightIdMapRcd, EcalTPGOddWeightIdMap);
+
+REGISTER_PLUGIN(EcalTPGTPModeRcd, EcalTPGTPMode);
+
 REGISTER_PLUGIN(EcalTPGCrystalStatusRcd, EcalCondObjectContainer<EcalTPGCrystalStatusCode>);
 REGISTER_PLUGIN(EcalTPGTowerStatusRcd, EcalTPGTowerStatus);
 REGISTER_PLUGIN(EcalTPGStripStatusRcd, EcalTPGStripStatus);

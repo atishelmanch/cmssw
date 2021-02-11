@@ -59,6 +59,7 @@
 #include "CondFormats/EcalObjects/interface/EcalTPGLutGroup.h"
 #include "CondFormats/EcalObjects/interface/EcalTPGWeightGroup.h"
 #include "CondFormats/EcalObjects/interface/EcalTPGOddWeightGroup.h"
+#include "CondFormats/EcalObjects/interface/EcalTPGTPMode.h"
 #include "CondFormats/EcalObjects/interface/EcalTPGPhysicsConst.h"
 #include "CondFormats/EcalObjects/interface/EcalTPGCrystalStatus.h"
 #include "CondFormats/EcalObjects/interface/EcalTPGCrystalStatusCode.h"

@@ -12,6 +12,7 @@
 #include "CondFormats/EcalObjects/interface/EcalTPGWeightIdMap.h"
 #include "CondFormats/EcalObjects/interface/EcalTPGOddWeightGroup.h"
 #include "CondFormats/EcalObjects/interface/EcalTPGOddWeightIdMap.h"
+#include "CondFormats/EcalObjects/interface/EcalTPGTPMode.h"
 
 #include "CondFormats/External/interface/EcalDetID.h"
 #include "CondFormats/External/interface/SMatrix.h"
