@@ -1,6 +1,27 @@
 import FWCore.ParameterSet.Config as cms
+import FWCore.ParameterSet.VarParsing as VarParsing
 
 process = cms.Process("ProcessOne")
+
+#-- Options that can be set on the command line 
+options = VarParsing.VarParsing('analysis')                             
+options.register ('inputTxtFile',
+                'file.txt', # default value -- 0 = Run 2 
+                VarParsing.VarParsing.multiplicity.singleton, 
+                VarParsing.VarParsing.varType.string,          
+                "inputFile")    
+options.register ('TPModeTag',
+                'EcalTPG_TPMode_Run2_default', # default value -- 0 = Run 2 
+                VarParsing.VarParsing.multiplicity.singleton, 
+                VarParsing.VarParsing.varType.string,          
+                "TPModeTag")  
+options.register ('outputDBFile',                                        
+                'output.db', 
+                VarParsing.VarParsing.multiplicity.singleton, 
+                VarParsing.VarParsing.varType.string,          
+                "outputDBFile")     
+options.parseArguments()
+
 
 process.MessageLogger = cms.Service("MessageLogger",
     cerr = cms.untracked.PSet(
@@ -22,7 +43,7 @@ process.source = cms.Source("EmptyIOVSource",
 
 process.load("CondCore.CondDB.CondDB_cfi")
 
-process.CondDB.connect = 'sqlite_file:EcalTPGTPMode.db'
+process.CondDB.connect = 'sqlite_file:%s' %(options.outputDBFile)
 
 process.PoolDBOutputService = cms.Service("PoolDBOutputService",
   process.CondDB, 
@@ -30,7 +51,7 @@ process.PoolDBOutputService = cms.Service("PoolDBOutputService",
   toPut = cms.VPSet(
     cms.PSet(
       record = cms.string('EcalTPGTPModeRcd'),
-      tag = cms.string('Ecal_tpmode_test')
+      tag = cms.string(options.TPModeTag)
     )
   )
 )
@@ -51,7 +72,7 @@ process.Test1 = cms.EDAnalyzer("ExTestEcalTPGTPModeAnalyzer",
     GenTag = cms.string(''),
     RunType = cms.string(''),
     fileType = cms.string('txt'),
-    fileName = cms.string('EcalTPGTPMode.txt'),
+    fileName = cms.string(options.inputTxtFile),
   )
 )
 
