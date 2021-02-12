@@ -2,6 +2,7 @@
 #include "CondFormats/EcalObjects/interface/EcalTPGLutIdMap.h"
 #include "CondFormats/EcalObjects/interface/EcalTPGSpike.h"
 #include "CondFormats/EcalObjects/interface/EcalTPGTowerStatus.h"
+#include "CondFormats/EcalObjects/interface/EcalTPGTPMode.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 #include <SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixTcpFormatEB.h>
 #include <iostream>
@@ -64,7 +65,7 @@ void EcalFenixTcpFormatEB::process(std::vector<int> &Et_even_sum,
         is_odd_larger = true;
       }
 
-      switch(TPmode_.EB_tcp_formatter_output){
+      switch(ecaltpgTPMode_->EBFenixTcpOutput){
         case 0: //output even sum
           myEt = Et_even_sum[i];
           break;
@@ -82,7 +83,7 @@ void EcalFenixTcpFormatEB::process(std::vector<int> &Et_even_sum,
 
       // check TPmode config to decide to output the FGVB or the odd>even flag
       int infobit1 = myFgvb;
-      if (TPmode_.flag_EB_odd_even_tcp) infobit1 = is_odd_larger;
+      if (ecaltpgTPMode_->EBFenixTcpInfobit1) infobit1 = is_odd_larger;
 
       // bug fix 091009:
       //myEt = Et[i];
@@ -120,7 +121,7 @@ void EcalFenixTcpFormatEB::setParameters(uint32_t towid,
                                        const EcalTPGLutIdMap *ecaltpgLut,
                                        const EcalTPGTowerStatus *ecaltpgbadTT,
                                        const EcalTPGSpike *ecaltpgSpike,
-                                       EcalFenixTPMode TPmode) {
+                                       const EcalTPGTPMode * ecaltpgTPMode) {
   // Get TP zeroing threshold - defaut to 1023 for old data (no record found or
   // EE)
   spikeZeroThresh_ = 1023;
@@ -152,5 +153,5 @@ void EcalFenixTcpFormatEB::setParameters(uint32_t towid,
     badTTStatus_ = &(*itbadTT).second;
   }
 
-  TPmode_ = TPmode;
+  ecaltpgTPMode_ = ecaltpgTPMode;
 }

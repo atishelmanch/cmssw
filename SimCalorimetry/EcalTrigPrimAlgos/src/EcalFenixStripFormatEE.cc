@@ -1,5 +1,6 @@
 #include <CondFormats/EcalObjects/interface/EcalTPGSlidingWindow.h>
 #include <CondFormats/EcalObjects/interface/EcalTPGStripStatus.h>
+#include <CondFormats/EcalObjects/interface/EcalTPGTPMode.h>
 #include <SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixStripFormatEE.h>
 
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
@@ -31,13 +32,13 @@ int EcalFenixStripFormatEE::process() {
   int even_output = 0;
   int odd_output = 0;
 
-  if (TPmode_.disable_EE_even_peak_finder){
+  if (ecaltpgTPMode_->DisableEEEvenPeakFinder){
     even_output = input_even_ >> shift_;
   }else{
     if (inputEvenPeak_ == 1) even_output = input_even_ >> shift_;
   }
 
-  if (TPmode_.enable_EE_odd_peak_finder){
+  if (ecaltpgTPMode_->EnableEEOddPeakFinder){
     if(inputOddPeak_ == 1) odd_output = input_odd_ >> shift_;
   }else{
     odd_output = input_odd_ >> shift_;
@@ -47,23 +48,23 @@ int EcalFenixStripFormatEE::process() {
   int output = 0;
   bool is_odd_larger = false;
 
-  if (TPmode_.enable_EE_odd_filter && (odd_output > even_output) ) is_odd_larger = true; // If running with odd filter enabled, check if odd output is larger regardless of strip formatter output mode 
-  switch(TPmode_.EE_strip_formatter_output){
+  if (ecaltpgTPMode_->EnableEEOddFilter && (odd_output > even_output) ) is_odd_larger = true; // If running with odd filter enabled, check if odd output is larger regardless of strip formatter output mode 
+  switch(ecaltpgTPMode_->FenixEEStripOutput){
     case 0: // even filter out
       output = even_output;  
       break;
     case 1: // odd filter out
-      if (TPmode_.enable_EE_odd_filter) output = odd_output;
+      if (ecaltpgTPMode_->EnableEEOddFilter) output = odd_output;
       else output = even_output;
       break;
     case 2: // larger between odd and even
-      if (TPmode_.enable_EE_odd_filter && (odd_output > even_output) ) {
+      if (ecaltpgTPMode_->EnableEEOddFilter && (odd_output > even_output) ) {
         output = odd_output;
       }
       else output = even_output;
       break;
     case 3: // even + odd
-      if (TPmode_.enable_EE_odd_filter) output = even_output + odd_output;
+      if (ecaltpgTPMode_->EnableEEOddFilter) output = even_output + odd_output;
       else output = even_output;
       break;
   }
@@ -77,7 +78,7 @@ int EcalFenixStripFormatEE::process() {
   // bit12 is sFGVB, bit13 is for odd>even flagging
   output |= ((fgvb_ & 0x1) << 12);
 
-  if (TPmode_.enable_EE_odd_filter && TPmode_.flag_EE_odd_even_strip ) { 
+  if (ecaltpgTPMode_->EnableEEOddFilter && ecaltpgTPMode_->FenixEEStripInfobit2 ) { 
     output |= ((is_odd_larger & 0x1) << 13);
   }
 
@@ -110,9 +111,9 @@ void EcalFenixStripFormatEE::process(std::vector<int> &fgvbout,
 void EcalFenixStripFormatEE::setParameters(uint32_t id,
                                            const EcalTPGSlidingWindow *&slWin,
                                            const EcalTPGStripStatus *stripStatus,
-                                           EcalFenixTPMode TPmode) {
+                                           const EcalTPGTPMode * ecaltpgTPMode) {
   // TP mode contains options for the formatter (odd/even filters config)
-  TPmode_= TPmode;
+  ecaltpgTPMode_ = ecaltpgTPMode;
   const EcalTPGSlidingWindowMap &slwinmap = slWin->getMap();
   EcalTPGSlidingWindowMapIterator it = slwinmap.find(id);
   if (it != slwinmap.end())

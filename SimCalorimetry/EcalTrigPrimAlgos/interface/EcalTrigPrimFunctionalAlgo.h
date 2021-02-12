@@ -23,7 +23,6 @@
 
 #include "SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixStrip.h"
 #include "SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixTcp.h"
-#include <SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixTPMode.h>
 
 #include "DataFormats/Common/interface/SortedCollection.h"
 #include "DataFormats/EcalDigi/interface/EcalDigiCollections.h"
@@ -49,7 +48,7 @@ class EcalElectronicsMapping;
 class EcalTrigPrimFunctionalAlgo {
 public:
   explicit EcalTrigPrimFunctionalAlgo(
-      const edm::EventSetup &setup, int binofmax, bool tcpFormat, bool barrelOnly, bool debug, bool famos, bool TPinfoPrintout, EcalFenixTPMode TPmode);
+      const edm::EventSetup &setup, int binofmax, bool tcpFormat, bool barrelOnly, bool debug, bool famos, bool TPinfoPrintout);
 
   virtual ~EcalTrigPrimFunctionalAlgo();
 
@@ -79,7 +78,8 @@ public:
                    const EcalTPGOddWeightGroup *ecaltpgOddWeightGroup,
                    const EcalTPGFineGrainStripEE *ecaltpgFgStripEE,
                    const EcalTPGCrystalStatus *ecaltpgBadX,
-                   const EcalTPGStripStatus *ecaltpgStripStatus) {
+                   const EcalTPGStripStatus *ecaltpgStripStatus,
+                   const EcalTPGTPMode * ecaltpgTPMode) {
     estrip_->setPointers(ecaltpPed,
                          ecaltpLin,
                          ecaltpgWeightMap,
@@ -89,7 +89,8 @@ public:
                          ecaltpgSlidW,
                          ecaltpgFgStripEE,
                          ecaltpgBadX,
-                         ecaltpgStripStatus);
+                         ecaltpgStripStatus,
+                         ecaltpgTPMode);
   }
   void setPointers2(const EcalTPGFineGrainEBGroup *ecaltpgFgEBGroup,
                     const EcalTPGLutGroup *ecaltpgLutGroup,
@@ -97,14 +98,16 @@ public:
                     const EcalTPGFineGrainEBIdMap *ecaltpgFineGrainEB,
                     const EcalTPGFineGrainTowerEE *ecaltpgFineGrainTowerEE,
                     const EcalTPGTowerStatus *ecaltpgBadTT,
-                    const EcalTPGSpike *ecaltpgSpike) {
+                    const EcalTPGSpike *ecaltpgSpike,
+                    const EcalTPGTPMode * ecaltpgTPMode) {
     etcp_->setPointers(ecaltpgFgEBGroup,
                        ecaltpgLutGroup,
                        ecaltpgLut,
                        ecaltpgFineGrainEB,
                        ecaltpgFineGrainTowerEE,
                        ecaltpgBadTT,
-                       ecaltpgSpike);
+                       ecaltpgSpike,
+                       ecaltpgTPMode);
   }
 
 private:
@@ -145,7 +148,6 @@ private:
   bool debug_;
   bool famos_; 
   bool TPinfoPrintout_; 
-  EcalFenixTPMode TPmode_;
 
   static const unsigned int nrSamples_;        // nr samples to write, should not be changed since by
                                                // convention the size means that it is coming from simulation

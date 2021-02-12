@@ -2,13 +2,13 @@
 #define ECAL_FENIX_TCP_EB_FORMAT_H
 
 #include "DataFormats/EcalDigi/interface/EcalTriggerPrimitiveSample.h"
-#include "SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixTPMode.h"
 #include <vector>
 
 class EcalTPGLutGroup;
 class EcalTPGLutIdMap;
 class EcalTPGTowerStatus;
 class EcalTPGSpike;
+class EcalTPGTPMode;
 
 /**
     \class EcalFenixStripFormat
@@ -42,7 +42,7 @@ public:
                      const EcalTPGLutIdMap *ecaltpgLut,
                      const EcalTPGTowerStatus *ecaltpgbadTT,
                      const EcalTPGSpike *ecaltpgSpike,
-                    EcalFenixTPMode TPmode);
+                     const EcalTPGTPMode * ecaltpgTPMode);
 
 private:
   const unsigned int *lut_;
@@ -53,7 +53,7 @@ private:
   bool famos_;
   unsigned int binOfMax_;
   uint16_t spikeZeroThresh_;
-  EcalFenixTPMode TPmode_;
+  const EcalTPGTPMode * ecaltpgTPMode_;
 };
 
 #endif

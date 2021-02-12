@@ -5,6 +5,7 @@
 #include "CondFormats/EcalObjects/interface/EcalTPGFineGrainTowerEE.h"
 #include "CondFormats/EcalObjects/interface/EcalTPGLutGroup.h"
 #include "CondFormats/EcalObjects/interface/EcalTPGLutIdMap.h"
+#include <CondFormats/EcalObjects/interface/EcalTPGTPMode.h>
 
 #include "FWCore/Framework/interface/ESHandle.h"
 
@@ -16,9 +17,8 @@ EcalFenixTcp::EcalFenixTcp(const edm::EventSetup &setup,
                            bool famos,
                            int binOfMax,
                            int maxNrSamples,
-                           int nbMaxStrips, 
-                           EcalFenixTPMode TPmode)
-    : debug_(debug), nbMaxStrips_(nbMaxStrips), TPmode_(TPmode) {
+                           int nbMaxStrips)
+    : debug_(debug), nbMaxStrips_(nbMaxStrips) {
   bypasslin_.resize(nbMaxStrips_);
   for (int i = 0; i < nbMaxStrips_; i++)
     bypasslin_[i] = new EcalFenixBypassLin();
@@ -182,7 +182,7 @@ void EcalFenixTcp::process_part2_barrel(std::vector<std::vector<int>> &bypasslin
   // call formatter
   int eTTotShift = 2;
 
-  this->getFormatterEB()->setParameters(towid.rawId(), ecaltpgLutGroup, ecaltpgLut, ecaltpgBadTT, ecaltpgSpike, TPmode_);
+  this->getFormatterEB()->setParameters(towid.rawId(), ecaltpgLutGroup, ecaltpgLut, ecaltpgBadTT, ecaltpgSpike, ecaltpgTPMode_);
   this->getFormatterEB()->process(adder_even_out_, adder_odd_out_, fgvb_out_, strip_fgvb_out_, eTTotShift, tcp_out, tcp_outTcc, false);
   // this is a test:
   if (debug_) {
@@ -226,7 +226,7 @@ void EcalFenixTcp::process_part2_endcap(std::vector<std::vector<int>> &bypasslin
   int eTTotShift = 2;  // Pascal: endcap has 12 bits as in EB (bug in FENIX!!!!)
                        // so shift must be applied to just keep [11:2]
 
-  this->getFormatterEE()->setParameters(towid.rawId(), ecaltpgLutGroup, ecaltpgLut, ecaltpgbadTT, nullptr, TPmode_);
+  this->getFormatterEE()->setParameters(towid.rawId(), ecaltpgLutGroup, ecaltpgLut, ecaltpgbadTT, nullptr, ecaltpgTPMode_);
 
   // Only the even sum is passed to the endcap formatter for the moment. 
   this->getFormatterEE()->process(adder_even_out_, fgvb_out_, strip_fgvb_out_, eTTotShift, tcp_out, tcp_outTcc, isInInnerRings);

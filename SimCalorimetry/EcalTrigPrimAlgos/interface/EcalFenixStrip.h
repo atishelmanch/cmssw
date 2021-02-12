@@ -7,7 +7,6 @@
 #include <SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixLinearizer.h>
 #include <SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixPeakFinder.h>
 #include <SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixStripFgvbEE.h>
-#include <SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixTPMode.h>
 
 #include "DataFormats/EcalDetId/interface/EcalTriggerElectronicsId.h"
 #include "FWCore/Framework/interface/ESHandle.h"
@@ -25,6 +24,7 @@ class EcalFenixStripFgvbEE;
 class EcalFenixStripFormatEB;
 class EcalFenixStripFormatEE;
 class EcalTPGStripStatus;
+class EcalTPGTPMode;
 
 /**
     \class EcalFenixStrip
@@ -39,8 +39,7 @@ public:
                  bool famos,
                  int maxNrSamples,
                  int nbMaxXtals,
-                 bool TPinfoPrintout,
-                 EcalFenixTPMode TPmode);
+                 bool TPinfoPrintout);
   virtual ~EcalFenixStrip();
 
 private:
@@ -49,7 +48,6 @@ private:
   bool famos_;
   int nbMaxXtals_; 
   bool TPinfoPrintout_;
-  EcalFenixTPMode TPmode_;
   std::vector<EcalFenixLinearizer *> linearizer_;
   EcalFenixAmplitudeFilter *amplitude_filter_;
   EcalFenixOddAmplitudeFilter *oddAmplitude_filter_;
@@ -91,6 +89,7 @@ private:
   const EcalTPGFineGrainStripEE *ecaltpgFgStripEE_;
   const EcalTPGCrystalStatus *ecaltpgBadX_;
   const EcalTPGStripStatus *ecaltpgStripStatus_;
+  const EcalTPGTPMode * ecaltpgTPMode_; 
 
   bool identif_;
   
@@ -104,7 +103,8 @@ public:
                    const EcalTPGSlidingWindow *ecaltpgSlidW,
                    const EcalTPGFineGrainStripEE *ecaltpgFgStripEE,
                    const EcalTPGCrystalStatus *ecaltpgBadX,
-                   const EcalTPGStripStatus *ecaltpgStripStatus) {
+                   const EcalTPGStripStatus *ecaltpgStripStatus,
+                   const EcalTPGTPMode * ecaltpgTPMode) {
     ecaltpPed_ = ecaltpPed;
     ecaltpLin_ = ecaltpLin;
     ecaltpgWeightMap_ = ecaltpgWeightMap;
@@ -115,6 +115,7 @@ public:
     ecaltpgFgStripEE_ = ecaltpgFgStripEE;
     ecaltpgBadX_ = ecaltpgBadX;
     ecaltpgStripStatus_ = ecaltpgStripStatus;
+    ecaltpgTPMode_ = ecaltpgTPMode;
   }
 
   // main methods

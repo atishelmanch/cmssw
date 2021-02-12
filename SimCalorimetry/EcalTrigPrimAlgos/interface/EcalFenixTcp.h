@@ -9,7 +9,6 @@
 #include <SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixTcpFormatEE.h>
 #include <SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixTcpFormatEB.h>
 #include <SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixTcpsFgvbEB.h>
-#include <SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixTPMode.h>
 
 #include <DataFormats/EcalDigi/interface/EBDataFrame.h>
 #include <DataFormats/EcalDigi/interface/EEDataFrame.h>
@@ -27,6 +26,7 @@ class EcalTPGFineGrainEBIdMap;
 class EcalTPGFineGrainTowerEE;
 class EcalTrigTowerDetId;
 class EcalTPGTowerStatus;
+class EcalTPGTPMode;
 
 /**
     \class EcalFenixTcp
@@ -47,7 +47,7 @@ private:
   EcalFenixTcpFormatEB *formatter_EB_;
   EcalFenixTcpFormatEE *formatter_EE_;
 
-  EcalFenixTPMode TPmode_;
+  
 
   // permanent data structures
   std::vector<std::vector<int>> bypasslin_out_;
@@ -65,7 +65,8 @@ public:
                    const EcalTPGFineGrainEBIdMap *ecaltpgFineGrainEB,
                    const EcalTPGFineGrainTowerEE *ecaltpgFineGrainTowerEE,
                    const EcalTPGTowerStatus *ecaltpgBadTT,
-                   const EcalTPGSpike *ecaltpgSpike) {
+                   const EcalTPGSpike *ecaltpgSpike,
+                   const EcalTPGTPMode* ecaltpgTPMode) {
     ecaltpgFgEBGroup_ = ecaltpgFgEBGroup;
     ecaltpgLutGroup_ = ecaltpgLutGroup;
     ecaltpgLut_ = ecaltpgLut;
@@ -73,6 +74,7 @@ public:
     ecaltpgFineGrainTowerEE_ = ecaltpgFineGrainTowerEE;
     ecaltpgBadTT_ = ecaltpgBadTT;
     ecaltpgSpike_ = ecaltpgSpike;
+    ecaltpgTPMode_ = ecaltpgTPMode;
   }
   // end temporary, for timing tests
 
@@ -82,8 +84,7 @@ public:
                bool famos,
                int binOfMax,
                int maxNrSamples,
-               int nbMaxStrips, 
-               EcalFenixTPMode TPmode);
+               int nbMaxStrips);
   virtual ~EcalFenixTcp();
 
   void process(const edm::EventSetup &setup,
@@ -148,6 +149,7 @@ public:
   const EcalTPGFineGrainTowerEE *ecaltpgFineGrainTowerEE_;
   const EcalTPGTowerStatus *ecaltpgBadTT_;
   const EcalTPGSpike *ecaltpgSpike_;
+  const EcalTPGTPMode * ecaltpgTPMode_;
 };
 
 #endif

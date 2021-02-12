@@ -2,6 +2,7 @@
 #include <SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixStripFgvbEE.h>
 #include <SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixStripFormatEB.h>
 #include <SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixStripFormatEE.h>
+#include <CondFormats/EcalObjects/interface/EcalTPGTPMode.h>
 
 #include "Geometry/EcalMapping/interface/EcalElectronicsMapping.h"
 
@@ -16,9 +17,8 @@ EcalFenixStrip::EcalFenixStrip(const edm::EventSetup &setup,
                                bool famos,
                                int maxNrSamples,
                                int nbMaxXtals,
-                               bool TPinfoPrintout,
-                               EcalFenixTPMode TPmode)
-    : theMapping_(theMapping), debug_(debug), famos_(famos), nbMaxXtals_(nbMaxXtals), TPmode_(TPmode) {
+                               bool TPinfoPrintout)
+    : theMapping_(theMapping), debug_(debug), famos_(famos), nbMaxXtals_(nbMaxXtals) {
   linearizer_.resize(nbMaxXtals_);
   for (int i = 0; i < nbMaxXtals_; i++)
     linearizer_[i] = new EcalFenixLinearizer(famos_);
@@ -152,7 +152,7 @@ void EcalFenixStrip::process_part1(int identif,
                     const EcalTPGCrystalStatus *ecaltpBadX) {
   if (debug_)  {
      std::cout << "\n\nEcalFenixStrip input is a vector of size: " << nrXtals << std::endl;
-     TPmode_.print();
+     ecaltpgTPMode_->Print();
   } 
 
   // loop over crystals
@@ -284,7 +284,7 @@ void EcalFenixStrip::process_part2_barrel(uint32_t stripid,
   // this->getFGVB()->process(lin_out_,fgvb_out_);
 
   // call formatter
-  this->getFormatterEB()->setParameters(stripid, ecaltpgSlidW, TPmode_);
+  this->getFormatterEB()->setParameters(stripid, ecaltpgSlidW, ecaltpgTPMode_);
   this->getFormatterEB()->process(fgvb_out_, even_peak_out_, even_filt_out_, odd_peak_out_, odd_filt_out_, format_out_);
 
   if (debug_) {
@@ -307,7 +307,7 @@ void EcalFenixStrip::process_part2_endcap(uint32_t stripid,
   // this->getFGVB()->process(lin_out_,fgvb_out_);
 
   // call formatter
-  this->getFormatterEE()->setParameters(stripid, ecaltpgSlidW, ecaltpgStripStatus, TPmode_);
+  this->getFormatterEE()->setParameters(stripid, ecaltpgSlidW, ecaltpgStripStatus, ecaltpgTPMode_);
   this->getFormatterEE()->process(fgvb_out_, even_peak_out_, even_filt_out_,  odd_peak_out_, odd_filt_out_, format_out_);
 
   if (debug_) {

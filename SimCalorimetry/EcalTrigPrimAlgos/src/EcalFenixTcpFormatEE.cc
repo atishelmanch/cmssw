@@ -2,6 +2,7 @@
 #include "CondFormats/EcalObjects/interface/EcalTPGLutIdMap.h"
 #include "CondFormats/EcalObjects/interface/EcalTPGSpike.h"
 #include "CondFormats/EcalObjects/interface/EcalTPGTowerStatus.h"
+#include "CondFormats/EcalObjects/interface/EcalTPGTPMode.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 #include <SimCalorimetry/EcalTrigPrimAlgos/interface/EcalFenixTcpFormatEE.h>
 #include <iostream>
@@ -95,7 +96,7 @@ void EcalFenixTcpFormatEE::setParameters(uint32_t towid,
                                        const EcalTPGLutIdMap *ecaltpgLut,
                                        const EcalTPGTowerStatus *ecaltpgbadTT,
                                        const EcalTPGSpike *ecaltpgSpike,
-                                       EcalFenixTPMode TPmode) {
+                                       const EcalTPGTPMode *  ecaltpgTPMode) {
   // Get TP zeroing threshold - defaut to 1023 for old data (no record found or
   // EE)
   spikeZeroThresh_ = 1023;
@@ -127,5 +128,5 @@ void EcalFenixTcpFormatEE::setParameters(uint32_t towid,
     badTTStatus_ = &(*itbadTT).second;
   }
 
-  TPmode_ = TPmode;
+  ecaltpgTPMode_ = ecaltpgTPMode;
 }

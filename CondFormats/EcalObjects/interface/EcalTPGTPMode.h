@@ -3,7 +3,6 @@
 
 #include "CondFormats/Serialization/interface/Serializable.h"
 
-
 /*
 Author: Davide Valsecchi
 Date:  11/02/2021
@@ -14,6 +13,8 @@ class EcalTPGTPMode {
 public:
   EcalTPGTPMode();
   ~EcalTPGTPMode();
+
+  void Print() const;
 
   bool EnableEBOddFilter;
   bool EnableEEOddFilter;
@@ -36,6 +37,7 @@ public:
   uint16_t FenixPar18;
 
   COND_SERIALIZABLE;
+
 
 };
 
