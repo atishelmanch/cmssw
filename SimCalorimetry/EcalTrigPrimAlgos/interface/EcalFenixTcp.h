@@ -47,6 +47,7 @@ private:
   EcalFenixTcpFormatEB *formatter_EB_;
   EcalFenixTcpFormatEE *formatter_EE_;
 
+  bool TPinfoPrintout_;
   EcalFenixTPMode TPmode_;
 
   // permanent data structures
@@ -83,6 +84,7 @@ public:
                int binOfMax,
                int maxNrSamples,
                int nbMaxStrips, 
+               bool TPinfoPrintout,
                EcalFenixTPMode TPmode);
   virtual ~EcalFenixTcp();
 
