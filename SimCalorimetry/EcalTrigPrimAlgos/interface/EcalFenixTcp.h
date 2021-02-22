@@ -36,6 +36,7 @@ class EcalFenixTcp {
 private:
   bool debug_;
   int nbMaxStrips_;
+  bool TPinfoPrintout_;
 
   EcalFenixMaxof2 *maxOf2_;
   std::vector<EcalFenixBypassLin *> bypasslin_;
@@ -84,7 +85,8 @@ public:
                bool famos,
                int binOfMax,
                int maxNrSamples,
-               int nbMaxStrips);
+               int nbMaxStrips,
+               bool TPinfoPrintout);
   virtual ~EcalFenixTcp();
 
   void process(const edm::EventSetup &setup,

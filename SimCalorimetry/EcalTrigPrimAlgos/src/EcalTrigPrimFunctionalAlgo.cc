@@ -83,7 +83,7 @@ void EcalTrigPrimFunctionalAlgo::init(const edm::EventSetup &setup) {
 
   // create main sub algos
   estrip_ = new EcalFenixStrip(setup, theMapping_, debug_, famos_, maxNrSamples_, nbMaxXtals_, TPinfoPrintout_);
-  etcp_ = new EcalFenixTcp(setup, tcpFormat_, debug_, famos_, binOfMaximum_, maxNrSamples_, nbMaxStrips_);
+  etcp_ = new EcalFenixTcp(setup, tcpFormat_, debug_, famos_, binOfMaximum_, maxNrSamples_, nbMaxStrips_, TPinfoPrintout_);
 
   // initialise data structures
   initStructures(towerMapEB_);
@@ -168,7 +168,7 @@ void EcalTrigPrimFunctionalAlgo::run_part2(
   estrip_->getFGVB()->setbadStripMissing(false);
 
   for (int itow = 0; itow < nrTowers_; ++itow) {
-    if(debug_){
+    if(TPinfoPrintout_){
       std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl; 
       std::cout << "on Tower " << itow << " of " << nrTowers_ << std::endl;
     } 
@@ -182,7 +182,7 @@ void EcalTrigPrimFunctionalAlgo::run_part2(
                                                             // size; nr of crystals/strip
 
       if ((towerMap[index])[i].first > 0) {
-        if(debug_){
+        if(TPinfoPrintout_){
           std::cout << "-------------------------------------------------" << std::endl; 
           std::cout << "on Strip index " << i << std::endl;
         }         

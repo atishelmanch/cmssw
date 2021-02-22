@@ -17,8 +17,9 @@ EcalFenixTcp::EcalFenixTcp(const edm::EventSetup &setup,
                            bool famos,
                            int binOfMax,
                            int maxNrSamples,
-                           int nbMaxStrips)
-    : debug_(debug), nbMaxStrips_(nbMaxStrips) {
+                           int nbMaxStrips,
+                           bool TPinfoPrintout)
+    : debug_(debug), nbMaxStrips_(nbMaxStrips), TPinfoPrintout_(TPinfoPrintout) {
   bypasslin_.resize(nbMaxStrips_);
   for (int i = 0; i < nbMaxStrips_; i++)
     bypasslin_[i] = new EcalFenixBypassLin();
@@ -184,7 +185,14 @@ void EcalFenixTcp::process_part2_barrel(std::vector<std::vector<int>> &bypasslin
 
   this->getFormatterEB()->setParameters(towid.rawId(), ecaltpgLutGroup, ecaltpgLut, ecaltpgBadTT, ecaltpgSpike, ecaltpgTPMode_);
   this->getFormatterEB()->process(adder_even_out_, adder_odd_out_, fgvb_out_, strip_fgvb_out_, eTTotShift, tcp_out, tcp_outTcc, false);
-  // this is a test:
+  
+  if(TPinfoPrintout_){
+    for (unsigned int i = 3; i < tcp_out.size(); i++) {
+      std::cout << " " << i << " " << std::dec << tcp_out[i] << std::endl;
+    }    
+  }
+
+
   if (debug_) {
     std::cout << "output of TCP formatter Barrel is a vector of size: " << std::dec << tcp_out.size() << std::endl;
     std::cout << "value : " << std::endl;
