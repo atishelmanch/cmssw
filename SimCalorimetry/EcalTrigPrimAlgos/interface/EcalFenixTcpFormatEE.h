@@ -1,5 +1,5 @@
-#ifndef ECAL_FENIX_TCP_FORMAT_H
-#define ECAL_FENIX_TCP_FORMAT_H
+#ifndef ECAL_FENIX_TCP_EE_FORMAT_H
+#define ECAL_FENIX_TCP_EE_FORMAT_H
 
 #include "DataFormats/EcalDigi/interface/EcalTriggerPrimitiveSample.h"
 #include <vector>
@@ -8,10 +8,11 @@ class EcalTPGLutGroup;
 class EcalTPGLutIdMap;
 class EcalTPGTowerStatus;
 class EcalTPGSpike;
+class EcalTPGTPMode;
 
 /**
-    \class EcalFenixStripFormat
-    \brief Formatting for Fenix Tcp
+    \class EcalFenixStripFormatEE 
+    \brief Formatting for Fenix Tcp EE
     *  input 10 bits from Ettot
     *         1 bit from fgvb
     *         3 bits TriggerTowerFlag
@@ -19,10 +20,10 @@ class EcalTPGSpike;
     *  simple formatting
     *
     */
-class EcalFenixTcpFormat {
+class EcalFenixTcpFormatEE {
 public:
-  EcalFenixTcpFormat(bool tccFormat, bool debug, bool famos, int binOfMax);
-  virtual ~EcalFenixTcpFormat();
+  EcalFenixTcpFormatEE(bool tccFormat, bool debug, bool famos, int binOfMax);
+  virtual ~EcalFenixTcpFormatEE();
   virtual std::vector<int> process(const std::vector<int> &, const std::vector<int> &) {
     std::vector<int> v;
     return v;
@@ -38,7 +39,8 @@ public:
                      const EcalTPGLutGroup *ecaltpgLutGroup,
                      const EcalTPGLutIdMap *ecaltpgLut,
                      const EcalTPGTowerStatus *ecaltpgbadTT,
-                     const EcalTPGSpike *ecaltpgSpike);
+                     const EcalTPGSpike *ecaltpgSpike,
+                     const EcalTPGTPMode * ecaltpgTPMode);
 
 private:
   const unsigned int *lut_;
@@ -49,6 +51,7 @@ private:
   bool famos_;
   unsigned int binOfMax_;
   uint16_t spikeZeroThresh_;
+  const EcalTPGTPMode * ecaltpgTPMode_;
 };
 
 #endif
