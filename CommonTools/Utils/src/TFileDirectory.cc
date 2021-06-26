@@ -57,12 +57,21 @@ TDirectory *TFileDirectory::_cd(const string &subdir, bool createNeededDirectori
     // that we are calling cd() on this directory AND cd() has not
     // been called with a subdirectory, so go ahead and make the
     // directory.
-    dir = _mkdir(dir, dir_, descr_);
+
+    //----- Removing by hand 
+    // dir = _mkdir(dir, dir_, descr_);
+    //----- Removing by hand
   }
-  bool ok = file_->cd(fpath.c_str());
-  if (!ok) {
-    throw cms::Exception("InvalidDirectory") << "Can't change directory to path: " << fpath;
-  }
+
+  //----- Removing by hand
+  // bool ok = file_->cd(fpath.c_str());
+  // if (!ok) {
+    // throw cms::Exception("InvalidDirectory") << "Can't change directory to path: " << fpath;
+  // }
+  //----- Removing by hand
+
+
+
   return dir;
 }
 

@@ -19,8 +19,11 @@ TFileService::TFileService(const edm::ParameterSet& cfg, edm::ActivityRegistry& 
       fileName_(cfg.getParameter<std::string>("fileName")),
       fileNameRecorded_(false),
       closeFileFast_(cfg.getUntrackedParameter<bool>("closeFileFast", false)) {
+  // tFileDirectory_ = TFileDirectory("", "", TFile::Open(fileName_.c_str(), "RECREATE"), "");
+  // tFileDirectory_ = TFileDirectory("", "", TFile::Open(fileName_.c_str(), "RECREATE"), "");
   tFileDirectory_ = TFileDirectory("", "", TFile::Open(fileName_.c_str(), "RECREATE"), "");
   file_ = tFileDirectory_.file_;
+  // file_ = TFile::Open(fileName_.c_str(), "RECREATE");
 
   // activities to monitor in order to set the proper directory
   r.watchPreModuleConstruction(this, &TFileService::setDirectoryName);
@@ -53,7 +56,8 @@ TFileService::~TFileService() {
 
 void TFileService::setDirectoryName(const edm::ModuleDescription& desc) {
   tFileDirectory_.file_ = file_;
-  tFileDirectory_.dir_ = desc.moduleLabel();
+  // tFileDirectory_.dir_ = desc.moduleLabel();
+  tFileDirectory_.dir_ = "THISISATEST";
   tFileDirectory_.descr_ = tFileDirectory_.dir_ + " (" + desc.moduleName() + ") folder";
 }
 
